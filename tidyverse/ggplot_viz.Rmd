@@ -29,6 +29,9 @@ gapminder <- read_tsv("gapminder.tsv", col_names = TRUE)
 
 
 # subset data
+
+#### filter() function
+
 If you're only working with a portion of the data, you want to subset it. Use `filter()` to combine rows. `filter()` is part of the dplyr package in the tidyverse.
 
 ```{r}
@@ -37,6 +40,40 @@ gapminder_2007 <- gapminder %>%
     filter(year == 2007)
 ```
 
+You may also want to summarize data. The `summarize()` function is different from filtering.
+
+#### summarize() function
+
+When subsetting data, you can summarize many rows into a single data point. You can use summarize with the following functions:<br>
+
+* `sum()`
+* `mean()`
+* `median()`
+* `min()`
+* `max()`
+
+For example:
+
+```{r}
+# average life expectancy in the year 2007 (all countries)
+gapminder %>%
+    filter(year == 2007) %>%
+    summarize(meanLifeExp = mean(lifeExp))
+```
+
+
+You can also summarize multiple variables at once.
+
+```{r}
+# 1957 median life expectancy and max GDP per capita
+gapminder %>%
+    filter(year == 1957) %>%
+    summarize(medianLifeExp = median(lifeExp),
+              maxGdpPercap = max(gdpPercap))
+```
+
+
+#### group_by() function
 
 # scatterplot
 
@@ -104,17 +141,6 @@ ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp,
     facet_wrap(~ continent)
 ```
 
-
-
-```{r}
-# facet by year
-# using gapminder data, not gapminder 2007, added color aes back
-ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp,
-                           color = continent,
-                           size = pop)) +
-    geom_point() +
-    scale_x_log10()
-```
 
 Note the change in our data. Because we are faceting by year, we need to use the full dataset and not just a single year's data.
 
