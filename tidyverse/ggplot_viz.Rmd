@@ -16,12 +16,6 @@ library(readr)
 
 # import data
 
-```{r}
-# csv with base R
-
-```
-
-
 ```{r message=FALSE}
 # tsv with readr
 gapminder <- read_tsv("gapminder.tsv", col_names = TRUE)
@@ -84,8 +78,18 @@ by_year <- gapminder %>%
     group_by(year) %>%
     summarize(meanLifeExp = mean(lifeExp),
               totalPop = sum(pop))
+
+by_year
 ```
 
+```{r}
+# 2007 data, group by continent
+gapminder %>%
+    filter(year == 2007) %>%
+    group_by(continent) %>%
+    summarize(meanLifeExp = mean(lifeExp),
+              totalPop = sum(pop))
+```
 
 
 # scatterplot
@@ -176,4 +180,59 @@ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,
     facet_wrap(~ year)
 ```
 
+
+# time series & line plots
+
+Visualizing change over time.
+
+```{r}
+# total population over time
+ggplot(by_year, aes(x = year, y = totalPop)) +
+    geom_line() +
+    expand_limits(y = 0)
+```
+
+We need the `expand_limits(y = 0)` otherwise we don't see that the populatoin tripled over this period. Without seeing ZERO on the y-axis we wouldn't see as steep an increase.
+
+
+```{r}
+# new data subset: 5vars = 2groups & 3summarized 
+by_year_continent <- gapminder %>% 
+    group_by(year, continent) %>% 
+    summarize(totalPop = sum(pop),
+              meanLifeExp = mean(lifeExp),
+              medianGdpPerCap = median(gdpPercap))
+
+head(by_year_continent, 15)
+```
+
+```{r}
+# population over time by continent
+ggplot(by_year_continent, aes(x = year, y = totalPop,
+                              color = continent)) +
+    geom_point() +
+    expand_limits(y = 0)
+
+```
+
+Notice how we are not yet even using: meanLifeExp or medianGdpPerCap
+
+```{r}
+# mean life expectancy over time by continent
+ggplot(by_year_continent, aes(x = year, y = meanLifeExp,
+                              color = continent)) +
+    geom_line() +
+    expand_limits(y = 0)
+```
+
+
+```{r}
+# median GDP per capita over time by continent
+ggplot(by_year_continent, aes(x = year, y = medianGdpPerCap,
+                              color = continent)) +
+    geom_line() +
+    expand_limits(y = 0)
+```
+
+# bar plots
 
