@@ -1,0 +1,131 @@
+---
+title: "ggplot visualizations"
+output: html_notebook
+---
+
+The benefit of importing data with tidyverse is that you can manipulate your data in your script or Rmd file without changing the underlying raw data.
+
+# setup
+
+```{r pkgs, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+```
+
+
+# import data
+
+```{r}
+# csv with base R
+
+```
+
+
+```{r message=FALSE}
+# tsv with readr
+gapminder <- read_tsv("gapminder.tsv", col_names = TRUE)
+```
+
+
+# subset data
+If you're only working with a portion of the data, you want to subset it. Use `filter()` to combine rows. `filter()` is part of the dplyr package in the tidyverse.
+
+```{r}
+# working with 2007 data only
+gapminder_2007 <- gapminder %>%
+    filter(year == 2007)
+```
+
+
+# scatterplot
+
+```{r}
+ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp)) +
+    geom_point()
+```
+
+
+### log scale axis
+
+```{r}
+# x-axis distribution above is too large, add log scale
+ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp)) +
+    geom_point() +
+    scale_x_log10()
+```
+
+
+# aesthetics
+
+### color
+
+```{r color}
+# mapping continent variable to color aesthetic
+ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp,
+                           color = continent)) +
+    geom_point() +
+    scale_x_log10()
+```
+
+### size
+
+```{r size}
+# adding size aesthetic to plot above
+ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp,
+                           color = continent,
+                           size = pop)) +
+    geom_point() +
+    scale_x_log10()
+```
+
+
+# faceting - multiple plots
+
+`~` means "by", so facet by ...
+
+```{r}
+# facet by continent
+# removed color aes, explanation below
+ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp)) +
+    geom_point() +
+    scale_x_log10() +
+    facet_wrap(~ continent)
+```
+
+We removed the color aesthetic in the code above because it doesn't add any new information. Here's the same code, but keeping the color aesthetic. You can see that it just creates a useless legend.
+
+```{r}
+# facet by continent, but keeping color aesthetic mapped to continent
+ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp,
+                           color = continent)) +
+    geom_point() +
+    scale_x_log10() +
+    facet_wrap(~ continent)
+```
+
+
+
+```{r}
+# facet by year
+# using gapminder data, not gapminder 2007, added color aes back
+ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp,
+                           color = continent,
+                           size = pop)) +
+    geom_point() +
+    scale_x_log10()
+```
+
+Note the change in our data. Because we are faceting by year, we need to use the full dataset and not just a single year's data.
+
+```{r}
+# facet by year
+# using gapminder data, not gapminder_2007, added color aesthetic back
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp,
+                      color = continent)) +
+    geom_point() +
+    scale_x_log10() +
+    facet_wrap(~ year)
+```
+
+
