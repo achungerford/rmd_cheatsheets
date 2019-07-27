@@ -30,7 +30,7 @@ gapminder <- read_tsv("gapminder.tsv", col_names = TRUE)
 
 # subset data
 
-#### filter() function
+### `filter()` function
 
 If you're only working with a portion of the data, you want to subset it. Use `filter()` to combine rows. `filter()` is part of the dplyr package in the tidyverse.
 
@@ -42,9 +42,9 @@ gapminder_2007 <- gapminder %>%
 
 You may also want to summarize data. The `summarize()` function is different from filtering.
 
-#### summarize() function
+### `summarize()` function
 
-When subsetting data, you can summarize many rows into a single data point. You can use summarize with the following functions:<br>
+To summarize many rows into a single data point you can use summarize with the following functions:
 
 * `sum()`
 * `mean()`
@@ -73,11 +73,25 @@ gapminder %>%
 ```
 
 
-#### group_by() function
+### `group_by()` function
+
+The `group_by()` function can be used with `summarize()` to let you summarize within groups instead of summarizing the entire data set.
+
+```{r}
+# grouping by year
+# then summarize mean life expectancy & population
+by_year <- gapminder %>%
+    group_by(year) %>%
+    summarize(meanLifeExp = mean(lifeExp),
+              totalPop = sum(pop))
+```
+
+
 
 # scatterplot
 
 ```{r}
+# filtered data 2007
 ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp)) +
     geom_point()
 ```
@@ -85,8 +99,16 @@ ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp)) +
 
 ### log scale axis
 
+Log scale: each tick mark is multiplied by a factor. <br>
+Log10 think `10...100...1,000...10,000` <br>
+Log2 think `2...4...8...16` <br> <br>
+
+Another way to think about it: <br>
+`10^1`...`10^2`...`10^3`...`10^4` <br>
+`2^1`...`2^2`...`2^3`...`2^4` <br>
+
 ```{r}
-# x-axis distribution above is too large, add log scale
+# distribution above on x-axis is too large, add log scale
 ggplot(gapminder_2007, aes(x = gdpPercap, y = lifeExp)) +
     geom_point() +
     scale_x_log10()
