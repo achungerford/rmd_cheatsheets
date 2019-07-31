@@ -3,11 +3,13 @@ title: "ggplot visualizations"
 output: html_notebook
 ---
 
+Tidyverse course: Data Vizualization with ggplot2 (Part 1).
+
 The benefit of importing data with tidyverse is that you can manipulate your data in your script or Rmd file without changing the underlying raw data.
 
 # setup
 
-```{r pkgs, warning=FALSE}
+```{r pkgs, message=FALSE, warning=FALSE}
 library(dplyr)
 library(ggplot2)
 library(readr)
@@ -84,11 +86,13 @@ by_year
 
 ```{r}
 # 2007 data, group by continent
-gapminder %>%
+by_continent <- gapminder %>%
     filter(year == 2007) %>%
     group_by(continent) %>%
     summarize(meanLifeExp = mean(lifeExp),
               totalPop = sum(pop))
+
+by_continent
 ```
 
 
@@ -236,3 +240,50 @@ ggplot(by_year_continent, aes(x = year, y = medianGdpPerCap,
 
 # bar plots
 
+Two aesthetics in a bar plot. x = categorical variable. y = numeric. Bar plots always start at ZERO.
+
+```{r}
+# basic
+# by_continent (above in group_by() section)
+ggplot(by_continent, aes(x = continent, y = meanLifeExp)) +
+    geom_col()
+```
+
+
+# histograms
+
+Shows the distribution of a variable. Each bar is a "bin" and height is number of values in that bin. The number of bins is chosen automatically and has a large affect on how the histogram communicates the distribution. You can customize with the `binwidth = value` option.
+
+```{r}
+# histogram, bins chosen automatically
+ggplot(gapminder_2007, aes(x = lifeExp)) +
+    geom_histogram()
+```
+
+
+If we choose `binwidth = 5` it means each bar in the histogram represents a width of 5 years. Sometimes, you may also need the x-axis to be a log scale to be understandable.
+
+```{r}
+# custom number of bins
+ggplot(gapminder_2007, aes(x = lifeExp)) +
+    geom_histogram(binwidth = 5)
+```
+
+
+```{r}
+# histogram with x-axis log scale
+ggplot(gapminder_2007, aes(x = pop)) +
+    geom_histogram() +
+    scale_x_log10()
+```
+
+
+# box plots
+
+Helps you understand the distribution of many variables (rather than 1 variable in a histogram). x is category. y is numeric value. Black line = median. Top and bottom of the box represent the 75th percentile and 25th percentile of the group. Meaning half of the distribution (middle 50%) lies within that box. The whiskers cover additional countries. The two dots for Asia and Americas represent outliers.
+
+```{r}
+# comparing distribution of life expectencies within each continent
+ggplot(gapminder_2007, aes(x = continent, y = lifeExp)) +
+    geom_boxplot()
+```
