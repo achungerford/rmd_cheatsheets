@@ -1,0 +1,41 @@
+---
+title: "Importing Data in R (Base R)"
+output: html_notebook
+---
+
+# flat files
+
+Say you want to import data in a platform-independent way. If a file `states.csv` were located in the `datasets` folder of our home directory. We would write the following code:
+
+`path <- file.path("~", "datasets", "states.csv")`
+
+You could then use that code: `read.csv(path, stringsAsFactors = FALSE)`.
+
+## `read.csv()`
+
+```{r}
+# Import swimming_pools.csv
+pools1 <- read.csv("C:\\Users\\Alexander\\Documents\\Programming\\rmd_cheatsheets\\import_data\\swimming_pools.csv")
+
+head(pools1)
+```
+
+
+```{r}
+# Import swimming_pools.csv with strings as factors
+pools <- read.csv("C:\\Users\\Alexander\\Documents\\Programming\\rmd_cheatsheets\\import_data\\swimming_pools.csv", stringsAsFactors = FALSE)
+
+head(pools)
+```
+
+
+# excel data
+
+# database data
+
+# web data
+
+# other statistical software data
+## SAS
+## SPSS
+## STATA
